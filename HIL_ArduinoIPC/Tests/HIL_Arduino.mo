@@ -36,10 +36,10 @@ equation
 
 algorithm 
   when sample(0, 0.05) then
-  pidOutputDummy := HIL_ArduinoIPC.Functions.SerialToShm(pidOutputIndex,1,115200) "writes the value of measured speed into the shared memory, pointed by pidInputIndex tag";
+  pidOutputDummy := HIL_ArduinoIPC.Functions.SerialToShm(0,115200) "writes the value of measured speed into the shared memory, pointed by pidInputIndex tag";
     motorInputValue := InterProcessCommunication.SharedMemory.SharedMemoryRead(motorInputIndex)         "SharedMemoryRead Function reads the value from the shared memory, pointed by pidOutputIndex tag and assigns it to the input of the DC motor";
     motorOutputDummy := InterProcessCommunication.SharedMemory.SharedMemoryWrite(motorOutputIndex, motorOutputValue) "SharedMemoryWrite Function writes the value of measured speed into the shared memory, pointed by pidInputIndex tag" ;
-    pidInputDummy := HIL_ArduinoIPC.Functions.ShmToSerial(pidInputIndex,1,115200) "reads the value from the shared memory, pointed by pidOutputIndex tag and assigns it to the input of the DC motor";
+    pidInputDummy := HIL_ArduinoIPC.Functions.ShmToSerial(0,115200) "reads the value from the shared memory, pointed by pidOutputIndex tag and assigns it to the input of the DC motor";
   end when;
   
   annotation(

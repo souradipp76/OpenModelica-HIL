@@ -16,83 +16,109 @@ struct DataExchange {
 
 struct DataExchange *PID;
 int fdshm;
-void shmAccess()
+void ShmAccess()
 {   
-    if ((fdshm = shm_open("/MIGOD", O_CREAT | O_RDWR, 0660)) == -1)
-        fprintf(stderr,"Failed to OPEN\n");
-    else if ((ftruncate(fdshm, sizeof(struct DataExchange))) == -1)
-        fprintf(stderr,"Failed to TRUNC\n");
-    else if ((PID = mmap(NULL, sizeof(struct DataExchange), PROT_READ | PROT_WRITE, MAP_SHARED, fdshm, 0)) == MAP_FAILED)
-        fprintf(stderr,"Failed to MMAP\n"); 
-        close(fdshm);   
+    if ((fdshm = shm_open("/MIGOD", O_CREAT | O_RDWR, 0660)) == -1)//, S_IRWXU | S_IRWXG);
+        fprintf(stderr,"Failed to OPEN");
+
+    if ((ftruncate(fdshm, sizeof(struct DataExchange))) == -1)
+        fprintf(stderr,"Failed to TRUNC");
+
+    if ((PID = mmap(NULL, sizeof(struct DataExchange), PROT_READ | PROT_WRITE, MAP_SHARED, fdshm, 0)) == MAP_FAILED)
+        fprintf(stderr,"Failed to MMAP"); 
+        close(fdshm);      
 }
 
 
-void shmWrite(int num1, double tagValue)
+void ShmWrite(int num1, double tagValue)
 {
     char outData[]="";
-    shmAccess();
-    sprintf(outData,"%g\n", tagValue);
+    ShmAccess();
+    sprintf(outData,"%d,%g\n", num1,tagValue);
     strcpy(PID-> sendVal[num1], outData);
-    PID-> getVal[num1] = tagValue;
+    //PID-> getVal[num1] = tagValue;
     //return 0;
 }
 
-double shmRead(int num2)
+char *ShmRead(int num2)
 {
-    shmAccess();
-
-    double retrunVal=0;
-    retrunVal = PID->getVal[num2];
+    ShmAccess();
+    char* retrunVal;
+    retrunVal = PID->sendVal[num2];
     return retrunVal;
-}				
+}		
 
-double SerialToShm(int addr,int Port,int S_Baud)
+double SerialToShm(int Port,int S_Baud)
 {
 	char S_Port[32]="";
 	sprintf(S_Port,"/dev/ttyACM%d",Port);
 	serialBegin(S_Port, S_Baud);
-    shmAccess();
+    ShmAccess();
 
 
 	int i,j;
 	char val[20]="";
 	char someData[32]="";
 	const char* inData;
+    char addr[20]="";
+    printf("Write started:%d\n",serialAvailable());
 	if(serialAvailable()>0)
     {
             inData = serialRead();
+            printf("indata:%s\n",inData);
             strcpy(someData, inData);
-            
-            for(j=0; j<strlen(someData); j++)
+            printf("somedata:%s\n",someData);
+            for(i=0; i<strlen(someData); i++)
             {
-                val[j] = someData[j];
+                if(someData[i]==',') 
+                {
+                    addr[i]='\0';
+                    i++;
+                    break;
+                }
+                addr[i] = someData[i];
             }
-            shmWrite(addr, atof(val)); 
+            printf("%d,%d,%d\n",i,(int)strlen(someData),atoi(addr));
+            for(j=i; j<strlen(someData); j++)
+            {
+                val[j-i] = someData[j];
+            }
+            printf("Writing Successful:%g\n",atof(val));
+            ShmAccess();
+            printf("Value%s\n",PID->sendVal[1]); 
+            ShmWrite(atoi(addr), atof(val));
+            
     }
+    serialEnd();
     return 0;
 }
 
-double ShmToSerial(int addr,int Port,int S_Baud)
+double ShmToSerial(int Port,int S_Baud)
 {
 	char S_Port[32]="";
 	sprintf(S_Port,"/dev/ttyACM%d",Port);
 	serialBegin(S_Port, S_Baud);
     serialFlush();
-    shmAccess();
+    ShmAccess();
+    int i,j;
 
-
-	double outData;
-
-    outData = shmRead(addr);
-    if(outData != 0){
-    printf("%g", outData);
-    char outstr[32];
-    sprintf(outstr,"%g",outData);
-    serialWrite(outstr);      
-    serialWait();
-    strcpy(PID->sendVal[addr], "");
+	char* outData;
+    
+    for (i=0; i<10; i++)
+    {    
+        outData = ShmRead(i);
+        //printf("input:%s\n", outData);
+        if(strcmp(outData, "") != 0)
+        {
+            printf("input(%d):%s", i,outData);
+            serialWrite(outData);
+            printf("%d\n",serialAvailable());      
+            //usleep(1000);
+            strcpy(PID->sendVal[i], "");
+            break;
+        }
     }
 
+    serialEnd();
     return 0;
 }

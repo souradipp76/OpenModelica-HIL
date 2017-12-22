@@ -133,13 +133,13 @@ package Arduino_HIL
     torque.tau = motorInputValue ;
     motorOutputValue = speed.w ;
     
-  //algorithm
+  algorithm
    when sample(0,0.05) then
-    pidOutputDummy = HIL_ArduinoIPC.Functions.SerialToShm(pidOutputIndex,0,115200) ;   
-    motorInputValue = InterProcessCommunication.SharedMemory.SharedMemoryRead(motorInputIndex);
+    pidOutputDummy := HIL_ArduinoIPC.Functions.SerialToShm(0,115200) ;   
+    motorInputValue := InterProcessCommunication.SharedMemory.SharedMemoryRead(motorInputIndex);
       strm.print(String(motorInputValue));
-      motorOutputDummy = InterProcessCommunication.SharedMemory.SharedMemoryWrite(motorOutputIndex, motorOutputValue) ;
-      pidInputDummy = HIL_ArduinoIPC.Functions.ShmToSerial(pidInputIndex,0,115200) ;
+      motorOutputDummy := InterProcessCommunication.SharedMemory.SharedMemoryWrite(motorOutputIndex, motorOutputValue) ;
+      pidInputDummy := HIL_ArduinoIPC.Functions.ShmToSerial(0,115200) ;
     end when;   
     annotation(
       Diagram(coordinateSystem(preserveAspectRatio = false, extent = {{-140, -100}, {140, 100}}, initialScale = 0.1), graphics = {Text(lineColor = {255, 0, 0}, extent = {{40, 37}, {90, 31}}, textString = "plant"), Rectangle(lineColor = {255, 0, 0}, extent = {{32, 40}, {104, -40}})}),
@@ -157,10 +157,16 @@ package Arduino_HIL
   </p>
   
   </html>"),
-      experiment(StopTime = 30, StartTime = 0, Tolerance = 1e-06, Interval = 0.01),
+      experiment(StopTime = 100, StartTime = 0, Tolerance = 1e-06, Interval = 0.01),
       __OpenModelica_simulationFlags(jacobian = "coloredNumerical", s = "dassl", lv = "LOG_STATS", nls = "homotopy", clock = "RT"));
   
   end hil_test3;
+
+
+
+
+
+
 
 
 
