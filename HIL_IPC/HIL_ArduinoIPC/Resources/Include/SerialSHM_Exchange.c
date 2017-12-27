@@ -52,12 +52,13 @@ double SerialToShm(int Port,int S_Baud)
 	sprintf(S_Port,"/dev/ttyACM%d",Port);
 	serialBegin(S_Port, S_Baud);
     ShmAccess();
-
+    printf("Value1:%s\n",PID->sendVal[1]);
 	int i,j;
 	char val[20]="";
 	char someData[32]="";
 	const char* inData;
     char addr[20]="";
+    printf("Available:%d\n",serialAvailable());
 	if(serialAvailable()>0)
     {
             inData = serialRead();
@@ -92,17 +93,19 @@ double ShmToSerial(int Port,int S_Baud)
     serialFlush();
     ShmAccess();
     int i,j;
-
+    printf("Value2:%s\n",PID->sendVal[1]);
 	char* outData;
     for (i=0; i<10; i++)
     {    
         outData = ShmRead(i);
-        if(strcmp(outData, "") == 0);
-        else{
-            printf("input:%s", outData);
+        printf("Data(%d):%s\n",i,outData);
+        if(strcmp(outData,"") != 0);
+        {
+            printf("input:%s\n", outData);
             serialWrite(outData);      
             usleep(1000);
             strcpy(PID->sendVal[i], "");
+            break;
         }
     }
     serialEnd();

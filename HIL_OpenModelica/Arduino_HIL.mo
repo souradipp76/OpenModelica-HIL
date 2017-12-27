@@ -85,12 +85,13 @@ package Arduino_HIL
       Line(points = {{60, 10}, {67, 10}}, color = {0, 0, 0}, smooth = Smooth.None));
     torque.tau = motorInputValue;
     motorOutputValue = speed.w;
+  algorithm  
     when sample(0, 0.05) then
-      pidOutputDummy = HIL_ArduinoIPC.Functions.SerialToShm(0, 115200);
-      motorInputValue = InterProcessCommunication.SharedMemory.SharedMemoryRead(motorInputIndex);
-      motorOutputDummy = InterProcessCommunication.SharedMemory.SharedMemoryWrite(motorOutputIndex, motorOutputValue);
-      pidInputDummy = HIL_ArduinoIPC.Functions.ShmToSerial(0, 115200);
-      strm.print(String(speed.w));
+      pidOutputDummy := HIL_ArduinoIPC.Functions.SerialToShm(0, 115200);
+      motorInputValue := InterProcessCommunication.SharedMemory.SharedMemoryRead(motorInputIndex);
+      motorOutputDummy := InterProcessCommunication.SharedMemory.SharedMemoryWrite(motorOutputIndex, motorOutputValue);
+      pidInputDummy := HIL_ArduinoIPC.Functions.ShmToSerial(0, 115200);
+      //strm.print(String(speed.w));
     end when;
     annotation(
       Diagram(coordinateSystem(preserveAspectRatio = false, extent = {{-140, -100}, {140, 100}}, initialScale = 0.1), graphics = {Text(lineColor = {255, 0, 0}, extent = {{40, 37}, {90, 31}}, textString = "plant"), Rectangle(lineColor = {255, 0, 0}, extent = {{32, 40}, {104, -40}})}),
@@ -108,9 +109,13 @@ package Arduino_HIL
   </p>
   
   </html>"),
-      experiment(StopTime = 30, StartTime = 0, Tolerance = 1e-06, Interval = 0.01),
+      experiment(StopTime = 50, StartTime = 0, Tolerance = 1e-06, Interval = 0.01),
       __OpenModelica_simulationFlags(jacobian = "coloredNumerical", s = "dassl", lv = "LOG_STATS", nls = "homotopy", clock = "RT"));
   end hil_test3;
+
+
+
+
 
   model testIPC
     Real dummy1;
