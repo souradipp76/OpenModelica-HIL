@@ -18,7 +18,7 @@ Please note that the library is known to work with
 
 
 * Install and Run:
-Launch OMEdit and load the package `OpenModelica-HIL-Simulation` and `InterProcessCommunication'.Also, load the `Servomechanisms` package present in the directory.Load the Arduino platform with the `cotroller.ino` code.Create any model using the package and simulate.
+Launch OMEdit and load the package `OpenModelica-HIL-Simulation` and `InterProcessCommunication`.Also, load the `Servomechanisms` package present in the directory.Load the Arduino platform with the `controller.ino` code.Create any model using the package and simulate.
 
 ## Running Test Simulation
   Test the package using `HIL_Arduino.mo` test provided.
@@ -34,7 +34,8 @@ Launch OMEdit and load the package `OpenModelica-HIL-Simulation` and `InterProce
   * Load the `HIL_Arduino.mo` test model present in package.
   * Simulate the model.If no error occurs,the package is good to go.
   
-For further information:  Visit https://build.openmodelica.org/Documentation/Modelica.html,https://build.openmodelica.org/Documentation/Servomechanisms.html
+For further information:  Visit https://build.openmodelica.org/Documentation/Modelica.html , 
+                          https://build.openmodelica.org/Documentation/Servomechanisms.html
 
 ## Development and contribution
 Main developers:
