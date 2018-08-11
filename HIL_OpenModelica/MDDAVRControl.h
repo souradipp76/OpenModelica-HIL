@@ -4,55 +4,46 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-#include "PIDAutoTuner.h"
+typedef struct {
+    double windup_guard;
+    double proportional_gain;
+    double integral_gain;
+    double derivative_gain;
+    double prev_error;
+    double int_error;
+    double control;
+} PID;
 
-#ifndef PID_H_
-#define PID_H_
-
-
-//Defineparameter
-#define MAX 5 //Saturation
-#define MIN 0
-
-float Kp;
-
-static inline float tuneController(float setpoint,float feedback)
-{
-	PIDAutotuner P_Arduino;
-	P_Arduino.setTargetInputValue(setpoint);
-	P_Arduino.loopInterval(1000);
-	P_Arduino.setZNMode(0);
-	P_Arduino.setOutputRange(0,1023);
-
-	P_Arduino.startTuningLoop();
-	while(!P_Arduino.isFinished())
-		P_Arduino.tunePID(feedback);
-
-	return P_Arduino.getKp();
+void pid_zeroize(PID* pid) {
+    // set prev and integrated error to zero
+    pid->prev_error = 0;
+    pid->int_error = 0;
 }
-
-static inline float control(float setpoint,float feedback)
-{
-	static float pre_error= 0;
-	float error;
-	float output;
-	//CaculateP,I,D
-	Kp=tuneController(setpoint,feedback);
-	error = setpoint -feedback;
-	output=Kp*error;
-
-	//Saturation Filter
-	if(output> MAX)
-	{
-		output= MAX;
-	}
-	elseif(output< MIN)
-	{
-		output= MIN;
-	}
-	//Update error
-	pre_error= error;
-	return output;
+ 
+void pid_update(PID* pid, double curr_error, double dt) {
+    double diff;
+    double p_term;
+    double i_term;
+    double d_term;
+ 
+    // integration with windup guarding
+    pid->int_error += (curr_error * dt);
+    if (pid->int_error < -(pid->windup_guard))
+        pid->int_error = -(pid->windup_guard);
+    else if (pid->int_error > pid->windup_guard)
+        pid->int_error = pid->windup_guard;
+ 
+    // differentiation
+    diff = ((curr_error - pid->prev_error) / dt);
+ 
+    // scaling
+    p_term = (pid->proportional_gain * curr_error);
+    i_term = (pid->integral_gain     * pid->int_error);
+    d_term = (pid->derivative_gain   * diff);
+ 
+    // summation of terms
+    pid->control = p_term + i_term + d_term;
+ 
+    // save current error as previous error for next iteration
+    pid->prev_error = curr_error;
 }
-
-#endif /*PID_H_*/
