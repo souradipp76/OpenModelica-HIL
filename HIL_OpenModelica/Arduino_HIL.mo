@@ -160,7 +160,7 @@ package Arduino_HIL
       extends Modelica.Icons.Example;
       Servomechanisms.Electrical.SignalDCMotor signalDCMotor1(J = 10) annotation(
         Placement(visible = true, transformation(origin = {0, 6}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      Modelica_DeviceDrivers.Blocks.Communication.SharedMemoryRead sharedMemoryRead1(autoBufferSize = true, memoryID = "1", sampleTime = 0.05, startTime = 0, userBufferSize = 10 * 32) annotation(
+      Modelica_DeviceDrivers.Blocks.Communication.SharedMemoryRead sharedMemoryRead1(autoBufferSize = true, memoryID = "sharedMemory", sampleTime = 0.05, startTime = 0, userBufferSize = 10 * 32) annotation(
         Placement(visible = true, transformation(origin = {-56, 78}, extent = {{-10, -10}, {10, 10}}, rotation = -90)));
       Modelica_DeviceDrivers.Blocks.Packaging.SerialPackager.AddReal addReal1(n = 1, nu = 1) annotation(
         Placement(visible = true, transformation(origin = {60, -28}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
@@ -178,7 +178,7 @@ package Arduino_HIL
         Placement(visible = true, transformation(origin = {-56, 4}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
       Modelica_DeviceDrivers.Blocks.Packaging.SerialPackager.GetString getString2(bufferSize = 2, nu = 0) annotation(
         Placement(visible = true, transformation(origin = {-56, -52}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      Modelica_DeviceDrivers.Blocks.Communication.SharedMemoryWrite sharedMemoryWrite1(autoBufferSize = true, memoryID = "1", sampleTime = 0.05, startTime = 0, userBufferSize = 10 * 32) annotation(
+      Modelica_DeviceDrivers.Blocks.Communication.SharedMemoryWrite sharedMemoryWrite1(autoBufferSize = true, memoryID = "sharedMemory", sampleTime = 0.05, startTime = 0, userBufferSize = 10 * 32) annotation(
         Placement(visible = true, transformation(origin = {60, -84}, extent = {{-10, -10}, {10, 10}}, rotation = -90)));
       Modelica_DeviceDrivers.Blocks.Packaging.SerialPackager.Packager packager1 annotation(
         Placement(visible = true, transformation(origin = {60, 64}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
