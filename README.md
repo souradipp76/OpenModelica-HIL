@@ -18,21 +18,21 @@ Please note that the library is known to work with
 
 
 * Install and Run:
-Launch OMEdit and load the package `OpenModelica-HIL-Simulation` and `InterProcessCommunication`.Also, load the `Servomechanisms` package present in the directory.Load the Arduino platform with the `controller.ino` code.Create any model using the package and simulate.
+Launch OMEdit with admin priviledeges('sudo mode') and load the package `OpenModelica-HIL-Simulation`(HIL\_IPC/HIL\_ArduinoIPC/package.mo \& HIL_OpenModelica/package.mo) and `InterProcessCommunication`(InterProcessCommunication/package.mo).Also, load the `Servomechanisms` package. Load the Arduino platform with the `controller1.ino` code in controller1 directory. Create any model using the package and simulate.
 
 ## Running Test Simulation
   Test the package using `HIL_Arduino.mo` test provided.
-  * Load the Arduino platform with the `controller.ino` code.
-  * Compile the SerialSHM.c file using the following command
+  * Load the Arduino platform with the `controller1.ino` code.
+  * Compile the SerialSHM.c file in HIL\_IPC/HIL\_ArduinoIPC/Resources/Include using the following command
   ```
-  $ gcc Serial_SHM.c -o Serial_SHM 
+  $ gcc Serial_SHM.c -o Serial_SHM -lrt
   ```
   * Execute the SerialSHM file using the following command
   ```
   $ sudo ./Serial_SHM
   ```
   * Load the `HIL_Arduino.mo` test model present in package.
-  * Simulate the model.If no error occurs,the package is good to go.
+  * Set simulation flag '-rt=1' in OMEdit. Simulate the model. If no error occurs, the package is good to go.
   
 For further information:  Visit https://build.openmodelica.org/Documentation/Modelica.html , 
                           https://build.openmodelica.org/Documentation/Servomechanisms.html
