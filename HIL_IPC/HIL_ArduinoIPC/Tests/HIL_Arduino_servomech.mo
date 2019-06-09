@@ -1,5 +1,5 @@
 within HIL_ArduinoIPC.Tests;
-model HIL_Arduino2
+model HIL_Arduino_servomech
   extends Modelica.Icons.Example;
   import strm = Modelica.Utilities.Streams;
   Servomechanisms.Electrical.SignalDCMotor signalDCMotor1(J = 10) annotation(
@@ -31,4 +31,4 @@ The values of control signal and speed of the DC motor are read from and written
 
 </html>"),experiment(StopTime = 100, StartTime = 0, Tolerance = 1e-06, Interval = 0.01),
     __OpenModelica_simulationFlags(jacobian = "coloredNumerical", s = "dassl", lv = "LOG_STATS", nls = "homotopy", clock = "RT"));
-end HIL_Arduino2;
+end HIL_Arduino_servomech;
