@@ -15,7 +15,7 @@ equation
   when sample(0, 0.05) then
     motorInputValue = InterProcessCommunication.SharedMemory.SharedMemoryRead(motorInputIndex);
     motorOutputDummy = InterProcessCommunication.SharedMemory.SharedMemoryWrite(motorOutputIndex, motorOutputValue);
-    strm.print(String(motorOutputValue));
+    //strm.print(String(motorOutputValue));
   end when;
    annotation(Documentation(info = "<html>
 
